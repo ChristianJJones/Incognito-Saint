@@ -4,7 +4,7 @@ Infrastructure {
 
 1. InstilledInteroperability.sol - connection for on-chain transactions, node creation, bridges, and acts as one of the reserve accounts
 
-2. USDMediator.sol - handles transactions & acts as one of the reserve accounts
+2. USDMediator.sol - handles transactions & acts as one of the reserve accounts 
 
 3. ZeropointPhoneServiceModem.sol - an unlimited internet, wifi, phone call, and text messsage connection with [endpointA:endpointB] encryption
 
@@ -53,6 +53,83 @@ Goate Defi {
 _________________
 *****************
 
+24/7 internet/wifi/onchain/data access built into the app-- InstilledInteroperability.sol && ZeropointPhoneServiceModem.sol
+
+SignUp / Create Account -- use google authentication, authenticate with the pi-sdk, or an email, password, confirm password
+
+login -- let them login
+
+create deposit/receive addresses -- InstilledInteroperability.sol
 
 
+allow them to transfer/send --InstilledInteroperability.sol
 
+allow them to deposit USD from their linked bank or card -- InstilledInteroperability.sol
+
+allow them to withraw USD onchain to their bank -- InstilledInteroperability.sol
+
+allow users to buy/sell USD -- InstilledInteroperability.sol && USDMediator.sol
+
+allow users to buy/sell crypto -- InstilledInteroperability.sol && USDMediator.sol
+
+allow users to swap crypto -- InstilledInteroperability.sol && USDMediator.sol
+
+allow users to buy/sell stocks & etfs --
+InstilledInteroperability.sol, USDMediator && zeropointDigitalStockNFT.sol
+
+allow users to stake/unstake crypto -- InstilledInteroperability.sol, USDMediator.sol, GoateStaking.sol, TokenPairStaking.sol, && zeropointDigitalStockNFT.sol
+
+allow users to transfer crypto/USD/stocks -- InstilledInteroperability, zeropointDigitalStockNFT.sol
+
+allow users to spend their onchain assets anywhere in the world -- InstilledInteroperability.sol, USDMediator.sol, PayWithCrypto, && TheLambduckCard.sol
+
+
+allow users to  manage their phones/electric vehicles/houses/etc remotely - InstilledInteroperability.sol && DeviceConnect.sol
+
+allow users to wirelessly charge their connected devices -- InstilledInteroperability.sol, DeviceConnect.sol, && Zeropoint.sol
+
+allow users to wirelessly access unlimited internet & wifi -- InstilledInteroperability.sol, DeviceConnect.sol && ZeropointWifi.sol
+
+allow users to lend/borrow crypto assets -- InstilledInteroperability.sol, USDMediator.sol, LendingAndBorrowing.sol, GoateStaking.sol, TokenPairStaking.sol && zeropointDigitalStockNFT.sol
+
+let users invest in fundrise real estate crowdfunding -- InstilledInteroperability.sol, USDMediator.sol, RealEstateCrowdfunding.sol
+
+let users bet on sports games -- InstilledInteroperability.sol, USDMediator.sol && HomeTeamBets.sol
+
+added UI/UX & account features for cj03nes@gmail.com owner -- InstilledInteroperability.sol && GhostGoate.sol
+_________________
+*****************
+
+REVENUE  & REVENUE SPLITS
+
+
+Zeropoint.sol - when zeropoint is consumed it is burned and the total value tied to it is allocated to : 
+20% - InstilledInteroperability.sol
+30% - USDMediator.sol
+50% - cj03nes
+
+ZeropointWifi.sol - when zeropointWifi is consumed it is burned and the total value tied to it is allocated to : 
+20% - InstilledInteroperability.sol
+30% - USDMediator.sol
+50% - cj03nes
+
+HomeTeamBets.sol - at the end of the game & the true outcome and winners have been decided; 
+
+80% - distributed between bet winners based on their (pro rata share) in the winning pot
+
+5% - USDMediator.sol
+5% - InstilledInteroperability.sol
+10% - cj03nes
+
+GoateStaking.sol, TokenPairStaking.sol, LendingAndBorrowing.sol, RealEstateCrowdfunding.sol, zeropointDigitalStockNFT.sol - the dividemds that the accounts receive are allocated as: 
+
+80% - msg.sender(pro rata) 
+5% - InstilledInteroperability.sol
+10% - USDMediator.sol
+5% - cj03nes
+
+InstilledInteroperability.sol - allocates his money into reserves of tokens, fiat, stocks, and real estate crowdfunding
+
+USDMediator.sol - allocates her money into reserves of tokens, fiat, stocks, and real estate crowdfunding
+_________________
+*****************
