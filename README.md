@@ -133,3 +133,13 @@ InstilledInteroperability.sol - allocates his money into reserves of tokens, fia
 USDMediator.sol - allocates her money into reserves of tokens, fiat, stocks, and real estate crowdfunding
 _________________
 *****************
+
+Token Prices
+
+use an aggregate of coingecko, coinmarketcap, and chainlink pricefeeds & data along with instilledInteroperability && USDMediator's prices & data
+__________________
+*******************
+
+Loading, Refreshing, and Syncing
+
+use a zeropointWifiModem to keep a 24/7 internet & wifi connection for on-chain & off-chain features; transactions should be done [endpointA:endpointB] / [addressFrom:addressTo] and should be settled instantly
