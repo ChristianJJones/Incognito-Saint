@@ -17,10 +17,6 @@ contract Zeropoint is ERC20, Ownable {
         _burn(from, amount);
     }
 
-    // Provide energy and reward with $ZPE
-    function provideEnergy(address user, uint256 amount) external onlyOwner {
-        _mint(user, amount);
-    }
 
     // Consume energy by burning $ZPE
     function consumeEnergy(address user, uint256 amount) external {
