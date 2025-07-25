@@ -1,4 +1,3 @@
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
@@ -15,16 +14,17 @@ contract DeviceConnect is Ownable {
         string deviceId;
         bool isActive;
         uint256 modalCount;
-        uint256 batterCapacity; // Percentage (0-100)
+        uint256 batteryCapacity; // Percentage (0-100)
         bool isCharging;
     }
-
 
     mapping(address => Device[]) public userDevices;
     mapping(string => bool) public deviceExists;
 
     event DeviceConnected(address indexed user, string deviceId);
     event DeviceUpdated(address indexed user, string deviceId, uint256 batteryCapacity, bool isCharging);
+    event DeviceDisconnected(address indexed user, string deviceId);
+    event ModalUsed(address indexed user, string deviceId, uint256 modalCount);
 
     constructor(address _interoperability, address initialOwner) Ownable(initialOwner) {
         interoperability = InstilledInteroperability(_interoperability);
@@ -35,8 +35,22 @@ contract DeviceConnect is Ownable {
     }
 
     function connectDevice(string memory deviceId) external {
+        require(!deviceExists[deviceId], "Device already exists");
         userDevices[msg.sender].push(Device(deviceId, true, 0, 100, false));
+        deviceExists[deviceId] = true;
         emit DeviceConnected(msg.sender, deviceId);
+    }
+
+    function disconnectDevice(string memory deviceId) external {
+        Device[] storage devices = userDevices[msg.sender];
+        for (uint256 i = 0; i < devices.length; i++) {
+            if (keccak256(bytes(devices[i].deviceId)) == keccak256(bytes(deviceId)) && devices[i].isActive) {
+                devices[i].isActive = false;
+                emit DeviceDisconnected(msg.sender, deviceId);
+                return;
+            }
+        }
+        revert("Device not found or already disconnected");
     }
 
     function updateDeviceStatus(string memory deviceId, uint256 batteryCapacity, bool isCharging) external {
@@ -47,54 +61,20 @@ contract DeviceConnect is Ownable {
         emit DeviceUpdated(msg.sender, deviceId, batteryCapacity, isCharging);
     }
 
-    function findDeviceIndex(string memory deviceId) internal view returns (uint256) {
-        for (uint256 i = 0; i < userDevices[msg.sender].length; i++) {
-            if (keccak256(abi.encodePacked(userDevices[msg.sender][i].deviceId)) == keccak256(abi.encodePacked(deviceId))) {
-                return i;
-            }
-        }
-        revert("Device not found");
-    }
-
-    function canProvideEnergy(string memory deviceId) external view returns (bool) {
-        uint256 index = findDeviceIndex(deviceId);
-        Device memory device = userDevices[msg.sender][index];
-        return device.batteryCapacity > 96 && device.isCharging;
-    }
-}
-
-    function addDevice(string memory deviceId) external {
-        require(!deviceExists[deviceId], "Device already exists");
-        userDevices[msg.sender].push(Device(deviceId, true, 0));
-        deviceExists[deviceId] = true;
-    }
-
-    function disconnectDevice(string memory deviceId) external {
-        Device[] storage devices = userDevices[msg.sender];
-        for (uint256 i = 0; i < devices.length; i++) {
-            if (keccak256(bytes(devices[i].deviceId)) == keccak256(bytes(deviceId)) && devices[i].isActive) {
-                devices[i].isActive = false;
-                return;
-            }
-        }
-        revert("Device not found or already disconnected");
-    }
-
     function useModal(string memory deviceId) external {
-        Device[] storage devices = userDevices[msg.sender];
-        for (uint256 i = 0; i < devices.length; i++) {
-            if (keccak256(bytes(devices[i].deviceId)) == keccak256(bytes(deviceId)) && devices[i].isActive) {
-                if (devices[i].modalCount < FREE_MODALS) {
-                    devices[i].modalCount++;
-                } else {
-                    require(revenueRecipient != address(0), "Revenue recipient not set");
-                    interoperability.crossChainTransfer(1, 1, "USDC", MODAL_COST, revenueRecipient);
-                    devices[i].modalCount++;
-                }
-                return;
-            }
+        uint256 index = findDeviceIndex(deviceId);
+        Device storage device = userDevices[msg.sender][index];
+        require(device.isActive, "Device is not active");
+
+        if (device.modalCount < FREE_MODALS) {
+            device.modalCount++;
+        } else {
+            require(revenueRecipient != address(0), "Revenue recipient not set");
+            interoperability.crossChainTransfer(1, 1, "USDC", MODAL_COST, revenueRecipient);
+            device.modalCount++;
         }
-        revert("Active device not found");
+
+        emit ModalUsed(msg.sender, deviceId, device.modalCount);
     }
 
     function getUserDevices(address user) external view returns (Device[] memory) {
@@ -102,12 +82,23 @@ contract DeviceConnect is Ownable {
     }
 
     function isDeviceActive(string memory deviceId) external view returns (bool) {
-        Device[] memory devices = userDevices[msg.sender];
+        uint256 index = findDeviceIndex(deviceId);
+        return userDevices[msg.sender][index].isActive;
+    }
+
+    function canProvideEnergy(string memory deviceId) external view returns (bool) {
+        uint256 index = findDeviceIndex(deviceId);
+        Device memory device = userDevices[msg.sender][index];
+        return device.batteryCapacity > 96 && device.isCharging;
+    }
+
+    function findDeviceIndex(string memory deviceId) internal view returns (uint256) {
+        Device[] storage devices = userDevices[msg.sender];
         for (uint256 i = 0; i < devices.length; i++) {
             if (keccak256(bytes(devices[i].deviceId)) == keccak256(bytes(deviceId))) {
-                return devices[i].isActive;
+                return i;
             }
         }
-        return false;
+        revert("Device not found");
     }
 }
